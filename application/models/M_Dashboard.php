@@ -46,5 +46,11 @@ class M_Dashboard extends CI_Model {
 					    ->row();
 	}
 
+	public function get_upwork_job_count(){
+		return $this->db->select('COUNT(id) as count')
+					    ->get('upwork_job')
+					    ->row();
+	}
+
 }
 ?>

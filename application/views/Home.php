@@ -115,6 +115,21 @@
 				</div>
 	        </div>
 	        
+			<!-- Item -->
+			<div class="col-xl-4 col-sm-4">
+				<div class="card rounded-0 shadow">
+					<div class="card-body">
+						<div class="d-flex align-items-center">
+							<div class="icon bg-green"><i class="fa fa-hourglass"></i></div>
+							<a href="#" class="text-secondary">
+							<div class="title"><span>Upwork Job</span></div>
+							</a>
+							<span class="number"><?php echo $upwork_job->count; ?></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Item -->
 		  </div>
 		</div>
 	</section>

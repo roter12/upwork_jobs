@@ -95,7 +95,13 @@
                                 <span>History</span>
                             </a>
                           </li>
-                          
+                          <li>
+                            <a href="'.base_url('index.php/upwork').'">
+                                <i class="fa fa-underline"></i>
+                                <span>Upwork</span>
+                            </a>
+                          </li>
+                                                    
                           <li>
                             <a href="'.base_url('index.php/user').'">
                                 <i class="fa fa-users"></i>
