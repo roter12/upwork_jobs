@@ -71,4 +71,12 @@ class Upwork extends CI_Controller {
 		$data=$this->udb->detail($id);
 		echo json_encode($data);
 	}
+
+	public function skill_list()
+	{
+		$data=$this->udb->get_skills();
+		$ret['skill'] = array_keys($data);
+		$ret['money'] = array_values($data);
+		echo json_encode($ret);
+	}
 }

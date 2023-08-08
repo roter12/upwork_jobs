@@ -22,6 +22,7 @@
 		<div class="card rounded-0 mt-10">
 			<div class="card-header">
 				<a href="#add" data-toggle="modal" class="btn btn-primary btn-sm rounded-0 pull-right"><i class="fa fa-plus"></i> Jobs</a>
+				<a href="#skill" data-toggle="modal" class="btn btn-sm rounded-0 pull-right" onclick="open_skill_modal()"><i class="fa fa-signal"></i> Jobs</a>
 			</div>
 			<div class="card-body">
 				<table class="table table-hover table-bordered" id="example" ui-options=ui-options="{
@@ -86,6 +87,25 @@
 		</div>
 	</div>
 </div>
+<div class="modal" id="skill">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				Top Skills
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+					<span class="sr-only">Close</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group row">
+					<div class="col-sm-12">
+						<table id="skill_tb"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="modal fade" id="edit">
 	<div class="modal-dialog" style="max-width: 90%;">
 		<div class="modal-content">
@@ -119,6 +139,19 @@
 			dataType:"json",
 			success:function(data){
 				$("#job_desc").val(data.description);
+			}
+		});
+	}
+	function open_skill_modal() {
+		$("#skill_tb").html('');
+		$.ajax({
+			type:"post",
+			url:"<?=base_url()?>index.php/upwork/skill_list",
+			dataType:"json",
+			success:function(data){
+				for (let x in data.skill) {
+					$("#skill_tb").append("<tr><td>"+(parseInt(x)+1)+'</td><td>'+data.skill[x]+'</td><td>'+Math.floor(data.money[x])+"</tr>");
+				}
 			}
 		});
 	}
