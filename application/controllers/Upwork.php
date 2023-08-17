@@ -78,8 +78,31 @@ class Upwork extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function skill_list()
+	public function skill($sdate = NULL, $edate = NULL)
 	{
-		echo json_encode($this->udb->get_skills_stats());
+		if ($sdate != NULL && $edate == NULL)
+			$edate = date('Y-m-d', strtotime($sdate .' +1 day'));
+
+		$data['sdate'] = $sdate;
+		$data['edate'] = $edate;
+		$data['skill'] = $this->udb->get_skills_stats($sdate, $edate);
+		$data['content'] = "v_skill";
+
+		// Only take front part.
+		$data['skill'] = array_slice($data['skill'], 0, 200);
+
+		$this->load->view('template', $data);
+	}
+
+	// For excel data
+	public function skill_data($sdate = NULL, $edate = NULL)
+	{
+		if ($sdate != NULL && $edate == NULL)
+			$edate = date('Y-m-d', strtotime($sdate .' +1 day'));
+
+		$data = $this->udb->get_skills_stats($sdate, $edate);
+		foreach ($data as $idx => $val) {
+			echo $idx.";".$val[0].";".$val[1].";".$val[2]."<br>";
+		}
 	}
 }

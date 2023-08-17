@@ -40,22 +40,28 @@ class M_upwork extends CI_Model {
 						->row();
 	}
 
-	public function get_skills_stats()
+	public function get_skills_stats($sdate, $edate)
 	{
 		$money_by_skill = array();
 		$month_by_skill = array();
 
 		$month_count = array(
-			'1 month' => 1,
+			'1 month' => 0.3, // less than month
 			'1-3 months' => 3,
-			'3-6 months' => 6,
-			'6 months+' => 12
+			'3-6 months' => 7,
+			'6 months+' => 14
 		);
 		
+		if ($sdate != NULL)
+			$this->db->where('publishedOn >=', $sdate);
+		if ($edate != NULL)
+			$this->db->where('publishedOn <=', $edate);
+
 		// (max-min)/2 * 6 hours * 20 days = (max-min) * 60
 		$all = $this->db
 			->select('skills,type,shortDuration,amount_amount,(hourlyBudget_max-hourlyBudget_min)*60 AS month_amount')
 			->where("skills IS NOT NULL")
+			->where("shortDuration IS NOT NULL")
 			->get('upwork_job')
 			->result();
 

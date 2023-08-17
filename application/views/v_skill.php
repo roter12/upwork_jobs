@@ -1,6 +1,6 @@
 <header class="page-header">
   <div class="container-fluid">
-    <h2 class="no-margin-bottom">Job</h2>
+    <h2 class="no-margin-bottom">Skill</h2>
   </div>
 </header>
 <div class="container-fluid">
@@ -20,8 +20,16 @@
 			} ?>
 		<?php endif  ?>
 		<div class="card rounded-0 mt-10">
-			<div class="card-header">
-				<a href="#add" data-toggle="modal" class="btn btn-primary btn-sm rounded-0 pull-right"><i class="fa fa-plus"></i> Jobs</a>
+			<div class="card-header row">
+				<div class="form-group col-2">
+					<input type="date" id="sdate" class="form-control" onfocusout="on_search()">
+				</div>
+				<div class="form-group col-2">
+					<input type="date" id="edate" class="form-control" onfocusout="on_search()">
+				</div>
+				<div class="col-2">
+					<button type="submit" class="btn btn-primary" onclick="on_search()"><i class="fa fa-search"></i> Search</button>
+				</div>
 			</div>
 			<div class="card-body">
 				<table class="table table-hover table-bordered" id="example" ui-options=ui-options="{
@@ -37,23 +45,19 @@
 					<thead style="background-color: #464b58; color:white;">
 						<tr>
 							<td>#</td>
-							<td>title</td>
-							<td>shortDuration</td>
-							<td>budget</td>
-							<td>proposals</td>
-							<td>client</td>
-							<td>skills</td>
+							<td>Skill</td>
+							<td>Price[$]</td>
+							<td>Period[M]</td>
+							<td>Unit[$/M]</td>
 						</tr></thead>
 						<tbody style="background-color: white;">
-						<?php $no=0; foreach ($all_job as $kat) : $no++;?>
+						<?php $no=0; foreach ($skill as $kat) : $no++;?>
 						<tr>
 							<td><?=$no?></td>
-							<td><a href="https://www.upwork.com/ab/proposals/job/<?=$kat->ciphertext?>/apply/"><?=$kat->title?></a></td>
-							<td><?=$kat->shortDuration?></td>
-							<td><?=$kat->type==1?$kat->amount_amount:$kat->hourlyBudgetText?></td>
-							<td><?=$kat->proposalsTier?></td>
-							<td><?=$kat->client_paymentVerificationStatus?'✅':''?> <?=$kat->client_location_country?><br><?=$kat->client_totalSpent?>-<?=$kat->client_totalFeedback.'/'.$kat->client_totalReviews?></td>
-							<td><a href="#edit" onclick="edit('<?=$kat->id?>')" data-toggle="modal"><?=$kat->skills?></a></td>
+							<td><?=$kat[0]?></td>
+							<td><?=number_format(floor($kat[1]))?></td>
+							<td><?=number_format(floor($kat[2]))?></td>
+							<td><?=$kat[2]?number_format(floor($kat[1]/$kat[2])):'-'?></td>
 						</tr>
 					<?php endforeach ?>
 					</tbody>
@@ -86,6 +90,25 @@
 		</div>
 	</div>
 </div>
+<div class="modal" id="skill">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				Top Skills
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+					<span class="sr-only">Close</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group row">
+					<div class="col-sm-12">
+						<table id="skill_tb"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="modal fade" id="edit">
 	<div class="modal-dialog" style="max-width: 90%;">
 		<div class="modal-content">
@@ -109,18 +132,32 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('#example').DataTable();
-	}
-	);
-	function edit(a) {
-		$.ajax({
-			type:"post",
-			url:"<?=base_url()?>index.php/upwork/view_job/"+a,
-			dataType:"json",
-			success:function(data){
-				$("#job_desc").val(data.description);
-			}
+
+		<?php if ($sdate == NULL) { ?>
+			document.getElementById('sdate').valueAsDate = new Date();
+		<?php } else { ?>
+			document.getElementById('sdate').value = "<?=$sdate?>";
+		<?php } ?>
+
+		<?php if ($edate == NULL) { ?>
+			document.getElementById('edate').valueAsDate = new Date();
+		<?php } else { ?>
+			document.getElementById('edate').value = "<?=$edate?>";
+		<?php } ?>
+
+		$('#example').DataTable({
+			"pageLength": <?=count($skill)?>,
+			columnDefs: [
+				{ targets: 0, className: 'dt-body-right' },
+				{ targets: 2, className: 'dt-body-right' },
+				{ targets: 3, className: 'dt-body-right' },
+				{ targets: 4, className: 'dt-body-right' },
+			]
 		});
+	});
+
+	function on_search() {
+		window.location.href = "<?=base_url()?>index.php/upwork/skill/"+$('#sdate').val()+'/'+$('#edate').val();
 	}
 </script>
 

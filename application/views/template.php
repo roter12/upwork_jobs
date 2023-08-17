@@ -98,7 +98,13 @@
                           <li>
                             <a href="'.base_url('index.php/upwork').'">
                                 <i class="fa fa-underline"></i>
-                                <span>Upwork</span>
+                                <span>Job</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="'.base_url('index.php/upwork/skill').'">
+                                <i class="fa fa-star"></i>
+                                <span>Skill</span>
                             </a>
                           </li>
                                                     
