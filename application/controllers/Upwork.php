@@ -89,7 +89,7 @@ class Upwork extends CI_Controller {
 		$data['content'] = "v_skill";
 
 		// Only take front part.
-		$data['skill'] = array_slice($data['skill'], 0, 200);
+		//$data['skill'] = array_slice($data['skill'], 0, 500);
 
 		$this->load->view('template', $data);
 	}

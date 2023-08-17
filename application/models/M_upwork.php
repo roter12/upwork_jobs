@@ -73,7 +73,8 @@ class M_upwork extends CI_Model {
 			if ($row->skills == '""' || trim($row->skills) == "")
 				continue;
 			$arr_skill = explode("|", $row->skills);
-			if (count($arr_skill) > 4) $arr_skill = array_slice($arr_skill, 0, 4); // Only takes front 4 skills.
+			if (count($arr_skill) > 3) // Only takes front 3 skills.
+				$arr_skill = array_slice($arr_skill, 0, 3);
 
 			// $ for one skill
 			$one_amount = $row->amount_amount / count($arr_skill);
