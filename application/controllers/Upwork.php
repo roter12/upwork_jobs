@@ -28,6 +28,7 @@ class Upwork extends CI_Controller {
 			return;
 		}
 
+		$ret1 = $ret2 = 0;
 		foreach ($json_data->searchResults->jobs as $job) {
 			$job->amount_currencyCode = $job->amount->currencyCode;
 			$job->amount_amount = $job->amount->amount;
@@ -58,24 +59,27 @@ class Upwork extends CI_Controller {
 			$job->prefFreelancerLocation = join('|', $job->prefFreelancerLocation);
 			$job->lowdata = json_encode($job);
 			
-			if (!$this->udb->save_job($job)) {
+			$ret = $this->udb->save_job($job);
+			if (!$ret) {
 				$this->session->set_flashdata('message', 'Failed to add job: '.$job->uid);
 				redirect('upwork','refresh');
 				return;
 			}
+
+			$ret == 2 ? $ret2++: $ret1++;
 		}
-		$this->session->set_flashdata('message', 'Upwork jobs have been added successfully');
+		$this->session->set_flashdata("message", "Done: $ret1(add), $ret2(update)");
 		redirect('upwork', 'refresh');
 	}
 
 	public function view_job($id)
 	{
-		$data=$this->udb->detail($id);
+		$data=$this->udb->get_row_cell($id);
 		echo json_encode($data);
 	}
 
 	public function skill_list()
 	{
-		echo json_encode($this->udb->get_skills());
+		echo json_encode($this->udb->get_skills_stats());
 	}
 }

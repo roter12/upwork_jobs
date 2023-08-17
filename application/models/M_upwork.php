@@ -14,6 +14,7 @@ class M_upwork extends CI_Model {
 
 	public function save_job($job)
 	{
+		// Check if exists
 		$old_row = $this->db->select('id')
 			->where('uid', $job->uid)
 			->limit(1)
@@ -21,21 +22,25 @@ class M_upwork extends CI_Model {
 			->row();
 
 		if ($old_row == null) { // Add new
-			return $this->db->insert('upwork_job', $job);			
+			if (!$this->db->insert('upwork_job', $job))
+				return 0;
+			return 1;
 		} else { // Update job
-			return $this->db->where('id', $old_row->id)->update('upwork_job',$job);
+			if (!$this->db->where('id', $old_row->id)->update('upwork_job',$job))
+				return 0;
+			return 2;
 		}
 	}
 
-	public function detail($a)
+	public function get_row_cell($row_id, $col_name = 'description')
 	{
-		return $this->db->select('description')
-						->where('id', $a)
+		return $this->db->select($col_name)
+						->where('id', $row_id)
 						->get('upwork_job')
 						->row();
 	}
 
-	public function get_skills()
+	public function get_skills_stats()
 	{
 		$money_by_skill = array();
 		$month_by_skill = array();
@@ -48,7 +53,7 @@ class M_upwork extends CI_Model {
 		);
 		
 		// (max-min)/2 * 6 hours * 20 days = (max-min) * 60
-		$all=$this->db
+		$all = $this->db
 			->select('skills,type,shortDuration,amount_amount,(hourlyBudget_max-hourlyBudget_min)*60 AS month_amount')
 			->where("skills IS NOT NULL")
 			->get('upwork_job')
