@@ -143,14 +143,14 @@
 		});
 	}
 	function open_skill_modal() {
-		$("#skill_tb").html('');
+		$("#skill_tb").html('<th><td>Skill</td><td>Price($)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>Period(Month)</td></th>');
 		$.ajax({
 			type:"post",
 			url:"<?=base_url()?>index.php/upwork/skill_list",
 			dataType:"json",
 			success:function(data){
-				for (let x in data.skill) {
-					$("#skill_tb").append("<tr><td>"+(parseInt(x)+1)+'</td><td>'+data.skill[x]+'</td><td>'+Math.floor(data.money[x])+"</tr>");
+				for (let x in data) {
+					$("#skill_tb").append("<tr><td>"+(parseInt(x)+1)+'</td><td>'+data[x][0]+'</td><td>'+Math.floor(data[x][1])+'</td><td>'+data[x][2]+"</td></tr>");
 				}
 			}
 		});

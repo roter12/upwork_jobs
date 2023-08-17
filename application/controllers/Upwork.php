@@ -8,10 +8,11 @@ class Upwork extends CI_Controller {
 		parent::__construct();
 		$this->load->model('m_upwork','udb');
 	}
+
 	public function index()
 	{
-		$data['all_job']=$this->udb->get_all();
-		$data['content']="v_upwork";
+		$data['all_job'] = $this->udb->get_table_data();
+		$data['content'] = "v_upwork";
 		$this->load->view('template', $data);
 	}
 
@@ -56,6 +57,7 @@ class Upwork extends CI_Controller {
 			$job->skills = join(' | ', array_column($job->attrs, 'prettyName'));
 			$job->prefFreelancerLocation = join('|', $job->prefFreelancerLocation);
 			$job->lowdata = json_encode($job);
+			
 			if (!$this->udb->save_job($job)) {
 				$this->session->set_flashdata('message', 'Failed to add job: '.$job->uid);
 				redirect('upwork','refresh');
@@ -74,9 +76,6 @@ class Upwork extends CI_Controller {
 
 	public function skill_list()
 	{
-		$data=$this->udb->get_skills();
-		$ret['skill'] = array_keys($data);
-		$ret['money'] = array_values($data);
-		echo json_encode($ret);
+		echo json_encode($this->udb->get_skills());
 	}
 }
