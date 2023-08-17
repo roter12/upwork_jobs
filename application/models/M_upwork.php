@@ -40,16 +40,16 @@ class M_upwork extends CI_Model {
 						->row();
 	}
 
-	public function get_skills_stats($sdate, $edate)
+	public function get_skills_stats($sdate, $edate, $limit_count = -1)
 	{
 		$money_by_skill = array();
 		$month_by_skill = array();
 
-		$month_count = array(
+		$month_count = array( // ^_~ 
 			'1 month' => 0.3, // less than month
 			'1-3 months' => 3,
-			'3-6 months' => 7,
-			'6 months+' => 14
+			'3-6 months' => 6,
+			'6 months+' => 12
 		);
 		
 		if ($sdate != NULL)
@@ -57,9 +57,9 @@ class M_upwork extends CI_Model {
 		if ($edate != NULL)
 			$this->db->where('publishedOn <=', $edate);
 
-		// (max-min)/2 * 6 hours * 20 days = (max-min) * 60
+		// ^_~ (min+(max-min)*0.7) * 6 hours * 24 days
 		$all = $this->db
-			->select('skills,type,shortDuration,amount_amount,(hourlyBudget_max-hourlyBudget_min)*60 AS month_amount')
+			->select('skills,type,shortDuration,amount_amount,(hourlyBudget_min+(hourlyBudget_max-hourlyBudget_min)*0.7)*144 AS month_amount')
 			->where("skills IS NOT NULL")
 			->where("shortDuration IS NOT NULL")
 			->get('upwork_job')
@@ -73,12 +73,12 @@ class M_upwork extends CI_Model {
 			if ($row->skills == '""' || trim($row->skills) == "")
 				continue;
 			$arr_skill = explode("|", $row->skills);
-			if (count($arr_skill) > 3) // Only takes front 3 skills.
+			if (count($arr_skill) > 3)  // ^_~ Only takes front 3 skills.
 				$arr_skill = array_slice($arr_skill, 0, 3);
 
 			// $ for one skill
-			$one_amount = $row->amount_amount / count($arr_skill);
-			$one_period = $row->month_amount / count($arr_skill);
+			$one_amount = $row->amount_amount / count($arr_skill); // ^_~
+			$one_period = $row->month_amount / count($arr_skill); // ^_~
 
 			foreach ($arr_skill as $skill) {
 				$skill = trim($skill);
@@ -103,6 +103,11 @@ class M_upwork extends CI_Model {
 		$ret = array();
 		foreach ($money_by_skill as $key => $val)
 			array_push($ret, array($key, $val, $month_by_skill[$key]));
+
+		// Only take front part by limit.
+		if ($limit_count != -1 && count($ret) > $limit_count)
+			$ret = array_slice($ret, 0, $limit_count);
+
 		return $ret;
 	}
 }

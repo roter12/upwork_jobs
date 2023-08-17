@@ -52,12 +52,12 @@
 						</tr></thead>
 						<tbody style="background-color: white;">
 						<?php $no=0; foreach ($skill as $kat) : $no++;?>
-						<tr>
+						<tr style="background-color: rgb(255,255,<?=$no?>)">
 							<td><?=$no?></td>
 							<td><?=$kat[0]?></td>
 							<td><?=number_format(floor($kat[1]))?></td>
 							<td><?=number_format(floor($kat[2]))?></td>
-							<td style="background: rgb(<?=$kat[2]?255-floor($kat[1]/$kat[2]):255?>,<?=$kat[2]?255-floor($kat[1]/$kat[2]):255?>,<?=$kat[2]?255-floor($kat[1]/$kat[2]):255?>);"><?=$kat[2]?number_format(floor($kat[1]/$kat[2])):'-'?></td>
+							<td><?=$kat[2]?number_format(floor($kat[1]/$kat[2])):'-'?></td>
 						</tr>
 					<?php endforeach ?>
 					</tbody>

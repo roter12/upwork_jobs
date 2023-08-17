@@ -11,7 +11,9 @@ class Upwork extends CI_Controller {
 
 	public function index()
 	{
-		$data['all_job'] = $this->udb->get_table_data();
+		$data['all_job'] = [];
+		if ($this->session->flashdata('message')==null)
+			$data['all_job'] = $this->udb->get_table_data();
 		$data['content'] = "v_upwork";
 		$this->load->view('template', $data);
 	}
@@ -87,9 +89,6 @@ class Upwork extends CI_Controller {
 		$data['edate'] = $edate;
 		$data['skill'] = $this->udb->get_skills_stats($sdate, $edate);
 		$data['content'] = "v_skill";
-
-		// Only take front part.
-		//$data['skill'] = array_slice($data['skill'], 0, 500);
 
 		$this->load->view('template', $data);
 	}
