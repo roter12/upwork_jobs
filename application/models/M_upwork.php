@@ -44,12 +44,22 @@ class M_upwork extends CI_Model {
 	{
 		$money_by_skill = array();
 		$month_by_skill = array();
+		$bid_by_skill = array();
 
 		$month_count = array( // ^_~ 
 			'1 month' => 0.3, // less than month
 			'1-3 months' => 3,
 			'3-6 months' => 6,
 			'6 months+' => 12
+		);
+
+		$bid_count = array(
+			"Less than 5" => 3,
+			"10 to 15" => 13,
+			"5 to 10" => 8,
+			"15 to 20" => 18,
+			"20 to 50" => 35,
+			"50+" => 70
 		);
 		
 		if ($sdate != NULL)
@@ -59,7 +69,7 @@ class M_upwork extends CI_Model {
 
 		// ^_~ (min+(max-min)*0.7) * 6 hours * 24 days
 		$all = $this->db
-			->select('skills,type,shortDuration,amount_amount,(hourlyBudget_min+(hourlyBudget_max-hourlyBudget_min)*0.7)*144 AS month_amount')
+			->select('skills,type,shortDuration,amount_amount,proposalsTier,(hourlyBudget_min+(hourlyBudget_max-hourlyBudget_min)*0.7)*144 AS month_amount')
 			->where("skills IS NOT NULL")
 			->where("shortDuration IS NOT NULL")
 			->get('upwork_job')
@@ -94,6 +104,12 @@ class M_upwork extends CI_Model {
 					$month_by_skill[$skill] = $month_by_skill[$skill] + $one_period;
 				else
 					$month_by_skill[$skill] = $one_period;
+
+				// update $month_by_skill
+				if (array_key_exists($skill, $bid_by_skill))
+					$bid_by_skill[$skill] = $bid_by_skill[$skill] + $bid_count[$row->proposalsTier];
+				else
+					$bid_by_skill[$skill] = $bid_count[$row->proposalsTier];
 			}
 		}
 
@@ -102,7 +118,7 @@ class M_upwork extends CI_Model {
 		// create array to return.
 		$ret = array();
 		foreach ($money_by_skill as $key => $val)
-			array_push($ret, array($key, $val, $month_by_skill[$key]));
+			array_push($ret, array($key, $val, $month_by_skill[$key], $bid_by_skill[$key]));
 
 		// Only take front part by limit.
 		if ($limit_count != -1 && count($ret) > $limit_count)

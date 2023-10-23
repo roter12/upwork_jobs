@@ -49,6 +49,7 @@
 							<td>Price[$]</td>
 							<td>Period[M]</td>
 							<td>Unit[$/M]</td>
+							<td>Bid</td>
 						</tr></thead>
 						<tbody style="background-color: white;">
 						<?php $no=0; foreach ($skill as $kat) : $no++;?>
@@ -58,6 +59,7 @@
 							<td><?=number_format(floor($kat[1]))?></td>
 							<td><?=number_format(floor($kat[2]))?></td>
 							<td><?=$kat[2]?number_format(floor($kat[1]/$kat[2])):'-'?></td>
+							<td><?=$kat[3]?></td>
 						</tr>
 					<?php endforeach ?>
 					</tbody>

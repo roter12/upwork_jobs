@@ -87,7 +87,7 @@ class Upwork extends CI_Controller {
 
 		$data['sdate'] = $sdate;
 		$data['edate'] = $edate;
-		$data['skill'] = $this->udb->get_skills_stats($sdate, $edate);
+		$data['skill'] = $this->udb->get_skills_stats($sdate, $edate, 200);
 		$data['content'] = "v_skill";
 
 		$this->load->view('template', $data);
@@ -101,7 +101,7 @@ class Upwork extends CI_Controller {
 
 		$data = $this->udb->get_skills_stats($sdate, $edate);
 		foreach ($data as $idx => $val) {
-			echo $idx.";".$val[0].";".$val[1].";".$val[2]."<br>";
+			echo $idx.";".$val[0].";".$val[1].";".$val[2].";".$val[3]."<br>";
 		}
 	}
 }
