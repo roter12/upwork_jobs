@@ -104,3 +104,8 @@ CREATE TABLE `upwork_job` (
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+
+/*UPDATE upwork_job SET amount_amount = 50000 WHERE amount_amount > 50000;*/
+/*UPDATE upwork_job SET hourlyBudget_max = 200 WHERE hourlyBudget_max > 200;*/
